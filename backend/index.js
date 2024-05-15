@@ -7,6 +7,10 @@ const DBNAME = process.env.DBNAME;
 import mongoose from 'mongoose';
 import cors from 'cors';
 import productRoutes from "./Routes/products.js";
+import userRoutes from './Routes/users.js';
+import orderRoutes from './Routes/order.js';
+import isAuth from './Middleware/auth.js';
+
 
 const app = express()
 
@@ -14,6 +18,23 @@ const app = express()
 app.use(cors())
 app.use(express.json());
 app.use("/products", productRoutes);
+app.use("/users", userRoutes);
+app.use("/order", orderRoutes);
+app.use(isAuth);
+
+
+// Middleware
+const corsOptions = {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    "content-type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+    allowedHeaders: ["Authorization", "Content-Type", "Accept"],
+    exposedHeaders: ["*"],
+    credentials: true,
+  };
+  
+  app.use(cors(corsOptions));
 
 
 async function connectToMongoDB() {
